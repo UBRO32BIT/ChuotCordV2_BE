@@ -14,7 +14,12 @@ class UserService {
     }
     async GetUserByUsername(username) {
         try {
-            const user = await UserModel.findOne({ username: username }).lean();
+            const user = await UserModel.findOne({ username: username })
+            .populate({
+                path: 'guilds',
+                select: '_id name image', // Select the fields you want to populate
+            })
+            .lean();
             return user;
         }
         catch (error) {
