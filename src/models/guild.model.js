@@ -47,4 +47,5 @@ const guilds = new mongoose.Schema({
 guilds.plugin(mongooseDelete, {deletedAt: true});
 guilds.plugin(mongoosePaginate);
 
-module.exports = mongoose.model('Guilds', guilds);
+const Guild = mongoose.model('Guilds', guilds);
+module.exports = Guild;

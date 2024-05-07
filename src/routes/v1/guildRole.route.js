@@ -1,5 +1,5 @@
 const express = require('express');
-const guildRoleController = require('../../controllers/v1/guild_role.controller')
+const guildRoleController = require('../../controllers/v1/guildRole.controller')
 const {CheckAccessToken: CheckAuth} = require('../../middlewares/auth');
 const AuthorizeGuild = require('../../middlewares/guild');
 

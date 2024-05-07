@@ -1,0 +1,39 @@
+const GuildChannelModel = require("../../models/guildChannel.model");
+
+class GuildChannelService {
+    async GetAllChannel() {
+
+    }
+    async GetChannelById(id) {
+        try {
+            const guild = await GuildChannelModel.findById(id).lean();
+            return guild;
+        }
+        catch (error) {
+            return null;
+        }
+    }
+    async CreateChannel(guildId, name, description) {
+        try {
+            const data = {
+                guild: guildId,
+                name: name,
+                description: description,
+            }
+            const guildChannel = new GuildChannelModel({...data});
+            return guildChannel.save().catch();
+        }
+        catch (error) {
+            throw error;
+        }
+
+    }
+    async UpdateChannel() {
+
+    }
+    async DeleteChannel() {
+
+    }
+}
+
+module.exports = new GuildChannelService;

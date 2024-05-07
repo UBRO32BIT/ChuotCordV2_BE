@@ -12,7 +12,16 @@ class GuildService {
     }
     async GetGuildById(id) {
         try {
-            const guild = await GuildModel.findById(id).lean();
+            const guild = await GuildModel.findById(id)
+            .populate({
+                path: 'channels',
+                select: '_id name',
+            })
+            .populate({
+                path: 'members.memberId',
+                select: '_id username profilePicture'
+            })
+            .lean();
             return guild
         }
         catch (error) {
@@ -30,6 +39,19 @@ class GuildService {
         try {
             const guild = new GuildModel({...data});
             return guild.save().catch();
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async AddGuildChannel(guildId, channelId) {
+        console.log(guildId);
+        console.log(channelId);
+        try {
+            await GuildModel.findOneAndUpdate(
+                { _id: guildId },
+                { $addToSet: { channels: channelId } }
+            );
         }
         catch (error) {
             throw error;

@@ -10,7 +10,7 @@ const messages = mongoose.Schema({
         type: String,
         required: true,
     },
-    reply_id: {
+    replyId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Messages',
     },

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete')
 const guildChannels = new mongoose.Schema({
-    guild_id: {
+    guild: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Guilds',
         required: true
@@ -18,7 +18,7 @@ const guildChannels = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Messages',
     }],
-    access_roles: [{
+    accessRoles: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'GuildRoles',
     }],

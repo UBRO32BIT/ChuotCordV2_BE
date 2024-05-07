@@ -10,28 +10,28 @@ const guildRoles = new mongoose.Schema({
         default: "#FFFFFF",
         required: true,
     },
-    guild_id: {
+    guildId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Guilds',
         required: true,
     },
-    can_view_log: {
+    canViewLog: {
         type: Boolean,
         required: true,
     },
-    can_edit_role: {
+    canEditRole: {
         type: Boolean,
         required: true,
     },
-    can_delete_message: {
+    canDeleteMessage: {
         type: Boolean,
         required: true,
     },
-    can_generate_invite_link: {
+    canGenerateInviteLink: {
         type: Boolean,
         required: true,
     },
-    can_kick_member: {
+    canKickMember: {
         type: Boolean,
         required: true,
     },

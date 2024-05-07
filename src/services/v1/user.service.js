@@ -46,6 +46,31 @@ class UserService {
             return error;
         }
     }
+    async UpdateUser(userId, data) {
+        try {
+            const user = await UserModel.findById(userId);
+            if (!user) {
+                throw new Error('User not found');
+            }
+    
+            if (updates.password) {
+                // If updating password, hash it before saving
+                const saltRounds = 10;
+                updates.password = await bcrypt.hash(updates.password, saltRounds);
+            }
+    
+            // Update other fields if provided
+            if (updates.profilePicture) {
+                user.profilePicture = updates.profilePicture;
+            }
+            if (updates.phoneNumber) {
+                user.phoneNumber = updates.phoneNumber;
+            }
+        }
+        catch (error) {
+
+        }
+    }
 }
 
 module.exports = new UserService;

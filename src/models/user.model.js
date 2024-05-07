@@ -20,7 +20,7 @@ const users = new mongoose.Schema({
         type: String,
         require: true,
     },
-    phone_number: {
+    phoneNumber: {
         type: String,
         required: false,
         default: null,
@@ -34,7 +34,7 @@ const users = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Guilds',
     }],
-    is_email_verified: {
+    isEmailVerified: {
         type: Boolean,
         default: false,
         require: true,
