@@ -1,6 +1,6 @@
 const userService = require('./user.service');
 const tokenService = require('./token.service');
-const UserModel = require("../../models/user.model");
+const UserModel = require("../../models/user/user.model");
 const bcrypt = require("bcrypt");
 const moment = require("moment");
 const config = require('../../config/config');

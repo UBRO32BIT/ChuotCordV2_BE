@@ -1,4 +1,4 @@
-const GuildChannelModel = require("../../models/guildChannel.model");
+const GuildChannelModel = require("../../models/guild/guildChannel.model");
 
 class GuildChannelService {
     async GetAllChannel() {

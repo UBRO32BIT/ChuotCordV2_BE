@@ -1,4 +1,4 @@
-const GuildModel = require("../../models/guild.model");
+const GuildModel = require("../../models/guild/guild.model");
 
 class GuildService {
     async GetGuilds() {
