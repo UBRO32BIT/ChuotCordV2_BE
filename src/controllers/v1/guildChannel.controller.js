@@ -20,7 +20,7 @@ class GuildChannelController {
             if (guildChannel) {
                 res.status(StatusCodes.OK).json({
                     message: "Channel found",
-                    data: guild
+                    data: guildChannel
                 });
             }
             else {
@@ -38,7 +38,7 @@ class GuildChannelController {
     async CreateChannel(req, res, next) {
         try {
             const { id } = req.params;
-            console.log(req.body);
+            console.log(`[GuildController]: Start creating channel with body: ` + req.body);
             const {name, description} = req.body;
             if (!id || !name) {
                 res.status(StatusCodes.BAD_REQUEST).json({

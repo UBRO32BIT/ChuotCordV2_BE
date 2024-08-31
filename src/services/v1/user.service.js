@@ -35,11 +35,34 @@ class UserService {
             return null;
         }
     }
+    async GetGuildsByUserId(userId) {
+        try {
+            const user = await UserModel.findById(userId).select('guilds -_id').populate({
+                path: 'guilds',
+                select: '_id name image', // Select the fields you want to populate
+            });
+            return user.guilds;
+        }
+        catch (error) {
+            return null;
+        }
+    }
     async AppendGroup(userId, guildId) {
         try {
             await UserModel.findOneAndUpdate(
                 { _id: userId },
                 { $addToSet: { guilds: guildId } }
+            );
+        }
+        catch (error) {
+            return error;
+        }
+    }
+    async RemoveGroup(userId, guildId) {
+        try {
+            await UserModel.findOneAndUpdate(
+                { _id: userId },
+                { $pull: { guilds: guildId } }
             );
         }
         catch (error) {
@@ -53,22 +76,25 @@ class UserService {
                 throw new Error('User not found');
             }
     
-            if (updates.password) {
+            if (data.password) {
                 // If updating password, hash it before saving
                 const saltRounds = 10;
-                updates.password = await bcrypt.hash(updates.password, saltRounds);
+                data.password = await bcrypt.hash(data.password, saltRounds);
             }
     
             // Update other fields if provided
-            if (updates.profilePicture) {
-                user.profilePicture = updates.profilePicture;
+            if (data.profilePicture) {
+                user.profilePicture = data.profilePicture;
             }
-            if (updates.phoneNumber) {
-                user.phoneNumber = updates.phoneNumber;
+            if (data.phoneNumber) {
+                user.phoneNumber = data.phoneNumber;
             }
+
+            await user.save();
+            return user;
         }
         catch (error) {
-
+            throw error;
         }
     }
 }

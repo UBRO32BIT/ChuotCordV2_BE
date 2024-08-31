@@ -59,7 +59,6 @@ class GuildController {
                     data: data,
                 });
             }
-            
         }
         catch (error) {
             logger.error(error);
@@ -75,11 +74,28 @@ class GuildController {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message});
         }
     }
+    async RemoveMemberFromGuild(req, res, next) {
+        try {
+            const { memberId } = req.params;
+            const id = req.params.id;
+            logger.info(`[GuildController]: Start removing user ${memberId} from guild ${id}`);
+            await guildService.RemoveMember(id, memberId);
+            await userService.RemoveGroup(memberId, id);
+            res.status(StatusCodes.NO_CONTENT).json({message: "Member removed"});
+        }
+        catch (error) {
+            logger.error(error);
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message});
+        }
+    }
     async DeleteGuild(req, res, next) {
         try {
+            const { userId } = req.user;
             const id = req.params.id;
-            const result = await guildService.DeleteGuild(id)
-            res.status(StatusCodes.NO_CONTENT).json({message: "test"});
+            logger.info(`[GuildController]: Start deleting guild with id ${id}`)
+            await guildService.DeleteGuild(id)
+            await userService.RemoveGroup(userId, id);
+            res.status(StatusCodes.NO_CONTENT).json({message: "Guild deleted"});
         }
         catch (error) {
             logger.error(error);

@@ -45,12 +45,33 @@ class GuildService {
         }
     }
     async AddGuildChannel(guildId, channelId) {
-        console.log(guildId);
-        console.log(channelId);
         try {
             await GuildModel.findOneAndUpdate(
                 { _id: guildId },
                 { $addToSet: { channels: channelId } }
+            );
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async AddMember(guildId, memberId) {
+        try {
+            await GuildModel.findByIdAndUpdate(
+                guildId,
+                { $push: { members: { memberId: memberId } } },
+                { new: true, useFindAndModify: false }
+            );
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async RemoveMember(guildId, memberId) {
+        try {
+            await GuildModel.findByIdAndUpdate(
+                guildId,
+                { $pull: { members: memberId } }
             );
         }
         catch (error) {

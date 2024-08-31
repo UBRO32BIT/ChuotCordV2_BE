@@ -11,22 +11,21 @@ const CheckAccessToken = async (req, res, next) => {
         const authHeader = req.headers.authorization;
         //Token not found
         if (!authHeader || !authHeader.startsWith('Bearer')) {
-            res.status(StatusCodes.BAD_REQUEST).json({message: 'Invalid access token'})
+            res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid access token' })
+            return;
         }
-        else {
-            const token = authHeader.split(' ')[1];
-            const payload = jwt.verify(token, JWT_ACCESS_SECRET_KEY)
-            const userData = await GetUserById(payload.sub);
-            req.user = {
-                userId: payload.sub,
-                data: userData,
-            }
-            next();
+        const token = authHeader.split(' ')[1];
+        const payload = jwt.verify(token, JWT_ACCESS_SECRET_KEY)
+        const userData = await GetUserById(payload.sub);
+        req.user = {
+            userId: payload.sub,
+            data: userData,
         }
-    } catch (error){
-        console.log(error)
-        res.status(StatusCodes.UNAUTHORIZED).json({ 
-            message: 'You are unauthorized to access this resource' 
+        next();
+    } catch (error) {
+        console.log(`[AuthMiddleware]: Invalid access token: ${error.message}`)
+        res.status(StatusCodes.UNAUTHORIZED).json({
+            message: 'You are unauthorized to access this resource'
         })
     }
 }
@@ -42,8 +41,8 @@ const CheckRefreshToken = async (req, res, next) => {
             next();
         }
         else {
-            res.status(StatusCodes.BAD_REQUEST).json({ 
-                message: 'Refresh token not found' 
+            res.status(StatusCodes.BAD_REQUEST).json({
+                message: 'Refresh token not found'
             })
         }
     }

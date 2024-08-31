@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const generateInviteString = require('../../utils/randomString');
 
-const guildInvites = mongoose.Schema({
+const guildInvites = new mongoose.Schema({
     guild: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Guilds',
@@ -19,7 +19,9 @@ const guildInvites = mongoose.Schema({
         default: generateInviteString,
     },
     expiration: {
-        type: Date,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'GuildInviteExpirations',
+        default: null,
         require: true,
     }
 },{timestamps: true})

@@ -22,12 +22,10 @@ const users = new mongoose.Schema({
     },
     phoneNumber: {
         type: String,
-        required: false,
         default: null,
     },
     profilePicture: {
         type: String,
-        require: false,
         default: null,
     },
     guilds: [{
@@ -47,9 +45,9 @@ users.plugin(mongoosePaginate);
 users.pre('save', async function (next){
     try {
         const user = this;
-        // if (!user.isModified('password')) {
-        //     return next();
-        // }
+        if (!user.isModified('password')) {
+            return next();
+        }
 
         // Generate a salt and hash the password
         const saltRounds = 10;

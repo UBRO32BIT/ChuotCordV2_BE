@@ -14,6 +14,21 @@ class UserController {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message});
         }
     }
+    async GetGroupsByUserId(req, res, next) {
+        try {
+            const {userId} = req.user;
+            console.log(`[UserController]: Start getting groups by user id ${userId}`);
+            const results = await userService.GetGuildsByUserId(userId);
+            res.status(StatusCodes.OK).json({
+                message: 'Query user',
+                data: results,
+            })
+        }
+        catch (error) {
+            console.log(error);
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message});
+        }
+    }
     async GetUserById(req, res, next) {
         try {
             const { id } = req.params;
@@ -36,7 +51,21 @@ class UserController {
     }
     async UpdateUser(req, res, next) {
         try {
-            res.status(StatusCodes.OK).json({message: "test"});
+            const {userId} = req.user;
+            const {
+                phoneNumber, 
+                profilePicture
+            } = req.body;
+            const data = {
+                phoneNumber,
+                profilePicture
+            }
+
+            const result = await userService.UpdateUser(userId, data);
+            res.status(StatusCodes.OK).json({
+                message: "Update successfully",
+                data: result,
+            });
         }
         catch (error) {
             console.log(error);

@@ -5,8 +5,9 @@ const {CheckAccessToken: CheckAuth} = require('../../middlewares/auth');
 const router = express.Router();
 
 router.get('/', CheckAuth, userController.GetUsers);
-router.get('/:id', userController.GetUserById);
-router.patch('/:id', CheckAuth, userController.UpdateUser);
+router.get('/guilds', CheckAuth, userController.GetGroupsByUserId);
+router.get('/:id', userController.GetUserById); 
+router.patch('/update', CheckAuth, userController.UpdateUser);
 router.patch('/ban/:id', CheckAuth, userController.BanUser);
 
 module.exports = router;

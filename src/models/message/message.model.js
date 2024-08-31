@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 
-const messages = mongoose.Schema({
+const messages = new mongoose.Schema({
     sender: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
+        required: true,
     },
     content: {
         type: String,
@@ -18,6 +19,10 @@ const messages = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Attachments',
     }],
+    channelId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Channels',
+    },
     timestamp: {
         type: Date,
         default: Date.now,
@@ -27,4 +32,5 @@ const messages = mongoose.Schema({
 
 messages.plugin(mongooseDelete, {deletedAt: true});
 
-module.exports = mongoose.model('Messages', messages);
+const Message = mongoose.model('Messages', messages);
+module.exports = Message;

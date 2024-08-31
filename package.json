@@ -28,6 +28,8 @@
     "mongoose-delete": "^1.0.2",
     "mongoose-paginate-v2": "^1.8.0",
     "passport": "^0.7.0",
+    "redis": "^4.6.14",
+    "socket.io": "^4.7.5",
     "validator": "^13.11.0",
     "winston": "^3.13.0",
     "xss-clean": "^0.1.4"
