@@ -41,12 +41,14 @@ const createSocket = (httpServer) => {
 
     socket.on("connection", async (socket) => {
         console.log(`[SOCKET]: User with ID ${socket.userId} connected`);
-        await onlineStatusService.ProcessUserOnline(socket.userId);
+        await onlineStatusService.processUserOnline(socket.userId);
 
-        socket.on("user_connect_channel", async (data) => {
-            if (data && data.channelId) {
-                socket.join(data.channelId);
-                console.log(`[SOCKET]: User ${socket.userId} connected channel ${data.channelId}`);
+        socket.on("user_connect_guild", async (data) => {
+            if (data && data.guildId) {
+                socket.join(data.guildId);
+                console.log(`[SOCKET]: User ${socket.userId} connected guild ${data.guildId}`);
+                const onlineMemberList = await onlineStatusService.getListMemberOnline(data.guildId);
+                socket.emit("online_members", onlineMemberList);
             }
         })
         
@@ -65,7 +67,7 @@ const createSocket = (httpServer) => {
                 }
             }
             catch (error) {
-                console.error(error.message);
+                console.error("[SOCKET]: Error while handle chat event: " + error.message);
             }
         })
 
@@ -79,7 +81,7 @@ const createSocket = (httpServer) => {
 
         socket.on("disconnect", async (data) => {
             console.log(`[SOCKET]: User disconnected ${socket.userId}`);
-            await onlineStatusService.RemoveUser(socket.userId);
+            await onlineStatusService.processUserOffline(socket.userId);
         })
     })
 }

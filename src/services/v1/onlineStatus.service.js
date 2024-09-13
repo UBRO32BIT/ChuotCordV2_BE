@@ -2,36 +2,55 @@ const redisClient = require("../../database/redis.database");
 const userService = require("./user.service");
 
 class OnlineStatusService {
-    async ProcessUserOnline(userId) {
+    constructor() {
+        this.init();
+    }
+
+    async init() {
+        if (!redisClient.isOpen) {
+            await redisClient.connect();  // Connect once when the service is initialized
+        }
+    }
+
+    async processUserOnline(userId) {
         const user = await userService.GetUserById(userId);
-        await this.AddUser();
-        user.guilds.forEach(async guild => {
-            await this.addUserToGuild();
+        await this.addUser(userId);
+        user.guilds.forEach(guild => {
+            this.addUserToGuild(userId, guild);
         });
     }
-    async AddUser(userId) {
-        await redisClient.connect();
-        await redisClient.set(`online:${userId}`, "");
-        await redisClient.quit();
+    async processUserOffline(userId) {
+        const user = await userService.GetUserById(userId);
+        await this.removeUser(userId);
+        user.guilds.forEach(guild => {
+            this.removeUserFromGuild(userId, guild);
+        });
     }
-    async RemoveUser(userId) {
-        await redisClient.connect();
+    async addUser(userId) {
+        await redisClient.set(`online:${userId}`, "");
+    }
+    async removeUser(userId) {
         await redisClient.del(`online:${userId}`)
-        await redisClient.quit();
     }
 
     async addUserToGuild(userId, guildId) {
-        await redisClient.connect();
-        await redisClient.set(`onlineGroup:${guildId}:${userId}`, "");
-        await redisClient.quit();
+        const key = `online:guild:${guildId}`;
+        await redisClient.sAdd(key, userId);
     }
+
     async getListMemberOnline(guildId) {
-        return await redisClient.get(`onlineGroup:${guildId}`);
+        try {
+            return await redisClient.sMembers(`online:guild:${guildId}`);
+        }
+        catch (error) {
+            console.error(error);
+            return null;
+        }
     }
+
     async removeUserFromGuild(userId, guildId) {
-        await redisClient.connect();
-        await redisClient.del(`onlineGroup:${guildId}:${userId}`, "");
-        await redisClient.quit();
+        const key = `online:guild:${guildId}`;
+        await redisClient.sRem(key, userId);
     }
 }
 

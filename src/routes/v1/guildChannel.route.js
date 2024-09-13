@@ -1,7 +1,7 @@
 const express = require('express');
 const messageRoute = require('./message.route');
 const channelController = require('../../controllers/v1/guildChannel.controller')
-const {CheckAccessToken: CheckAuth} = require('../../middlewares/auth')
+const {checkAccessToken: CheckAuth} = require('../../middlewares/auth')
 
 const router = express.Router({ mergeParams: true });
 

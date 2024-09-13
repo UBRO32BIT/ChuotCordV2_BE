@@ -1,6 +1,6 @@
 const express = require('express');
 const messageController = require('../../controllers/v1/message.controller');
-const {CheckAccessToken: CheckAuth} = require('../../middlewares/auth')
+const {checkAccessToken: CheckAuth} = require('../../middlewares/auth')
 
 const router = express.Router({ mergeParams: true });
 

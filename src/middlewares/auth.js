@@ -6,7 +6,7 @@ const config = require('../config/config');
 const JWT_ACCESS_SECRET_KEY = config.jwt.accessSecret;
 const JWT_REFRESH_SECRET_KEY = config.jwt.refreshSecret;
 
-const CheckAccessToken = async (req, res, next) => {
+const checkAccessToken = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
         //Token not found
@@ -30,7 +30,7 @@ const CheckAccessToken = async (req, res, next) => {
     }
 }
 
-const CheckRefreshToken = async (req, res, next) => {
+const checkRefreshToken = async (req, res, next) => {
     try {
         if (req.cookies && req.cookies.refreshToken) {
             const payload = jwt.verify(req.cookies.refreshToken, JWT_REFRESH_SECRET_KEY);
@@ -55,6 +55,6 @@ const CheckRefreshToken = async (req, res, next) => {
 }
 
 module.exports = {
-    CheckAccessToken,
-    CheckRefreshToken,
+    checkAccessToken,
+    checkRefreshToken,
 };

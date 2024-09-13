@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const generateInviteString = require('../../utils/randomString');
+const generateInviteString = require('../../utils/string.util');
 
 const guildInvites = new mongoose.Schema({
     guild: {

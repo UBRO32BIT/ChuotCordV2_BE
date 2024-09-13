@@ -1,7 +1,7 @@
 const express = require('express');
 const guildController = require('../../controllers/v1/guild.controller')
 const guildInviteController = require('../../controllers/v1/guildInvite.controller')
-const {CheckAccessToken: CheckAuth} = require('../../middlewares/auth');
+const {checkAccessToken: CheckAuth} = require('../../middlewares/auth');
 const channelRoute = require('./guildChannel.route');
 const roleRoute = require('./guildRole.route');
 const {AuthorizeGuild, ValidateRemoveMember} = require('../../middlewares/guild');

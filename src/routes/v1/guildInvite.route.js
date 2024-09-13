@@ -1,6 +1,6 @@
 const express = require('express');
 const guildInviteController = require('../../controllers/v1/guildInvite.controller')
-const {CheckAccessToken: CheckAuth} = require('../../middlewares/auth')
+const {checkAccessToken: CheckAuth} = require('../../middlewares/auth')
 
 const router = express.Router({ mergeParams: true });
 

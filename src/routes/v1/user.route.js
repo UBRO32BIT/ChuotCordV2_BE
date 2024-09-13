@@ -1,6 +1,6 @@
 const express = require('express');
 const userController = require('../../controllers/v1/user.controller')
-const {CheckAccessToken: CheckAuth} = require('../../middlewares/auth');
+const {checkAccessToken: CheckAuth} = require('../../middlewares/auth');
 
 const router = express.Router();
 
