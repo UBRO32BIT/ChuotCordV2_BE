@@ -45,10 +45,16 @@ const createSocket = (httpServer) => {
 
         socket.on("user_connect_guild", async (data) => {
             if (data && data.guildId) {
-                socket.join(data.guildId);
                 console.log(`[SOCKET]: User ${socket.userId} connected guild ${data.guildId}`);
                 const onlineMemberList = await onlineStatusService.getListMemberOnline(data.guildId);
                 socket.emit("online_members", onlineMemberList);
+            }
+        })
+
+        socket.on("user_connect_channel", async (data) => {
+            if (data && data.channelId) {
+                socket.join(data.channelId);
+                console.log(`[SOCKET]: User ${socket.userId} connected channel ${data.channel}`);
             }
         })
         
@@ -57,6 +63,7 @@ const createSocket = (httpServer) => {
                 if (data && data.channelId && data.message) {
                     data.userId = socket.userId;
                     const message = await messageService.AddMessage(data);
+                    console.log(message);
                     socket.nsp.to(message.channelId.toString()).emit("chat_received", {
                         userId: message.sender,
                         content: message.content,
