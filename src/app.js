@@ -1,5 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
+const path = require("path");
 const xss = require('xss-clean');
 const mongoSanitize = require('express-mongo-sanitize');
 const compression = require('compression');
@@ -57,6 +58,14 @@ if (config.env === 'production') {
 
 // v1 api routes
 app.use('/v1', routes);
+
+app.use('/uploads', express.static(path.join(__dirname, '../uploads'), {
+  setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.png') || filePath.endsWith('.jfif')) {
+          res.setHeader('Content-Type', 'image/png');
+      }
+  }
+}));
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

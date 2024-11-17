@@ -59,23 +59,23 @@ const createSocket = (httpServer) => {
         })
         
         socket.on("chat", async (data) => {
-            try {
-                if (data && data.channelId && data.message) {
-                    data.userId = socket.userId;
-                    const message = await messageService.AddMessage(data);
-                    console.log(message);
-                    socket.nsp.to(message.channelId.toString()).emit("chat_received", {
-                        userId: message.sender,
-                        content: message.content,
-                        replyId: message.replyId,
-                        attachments: message.attachments,
-                        timestamp: message.timestamp,
-                    });
-                }
-            }
-            catch (error) {
-                console.error("[SOCKET]: Error while handle chat event: " + error.message);
-            }
+            // try {
+            //     if (data && data.channelId && data.message) {
+            //         data.userId = socket.userId;
+            //         const message = await messageService.AddMessage(data);
+            //         console.log(message);
+            //         socket.nsp.to(message.channelId.toString()).emit("chat_received", {
+            //             userId: message.sender,
+            //             content: message.content,
+            //             replyId: message.replyId,
+            //             attachments: message.attachments,
+            //             timestamp: message.timestamp,
+            //         });
+            //     }
+            // }
+            // catch (error) {
+            //     console.error("[SOCKET]: Error while handle chat event: " + error.message);
+            // }
         })
 
         socket.on("user_typing", async (data) => {
@@ -93,7 +93,14 @@ const createSocket = (httpServer) => {
     })
 }
 
+const getSocket = () => {
+    if (!socket) {
+        throw new Error("Socket.io is not initialized!");
+    }
+    return socket;
+};
+
 module.exports = {
-    socket,
+    getSocket,
     createSocket,
 };
