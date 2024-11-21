@@ -79,7 +79,12 @@ const createSocket = (httpServer) => {
         })
 
         socket.on("user_typing", async (data) => {
-            //if (data && data.)
+            if (data && data.channelId) {
+                socket.nsp.to(data.channelId).emit("user_typing", {
+                    channelId: data.channelId,
+                    userId: socket.userId,
+                });
+            }
         })
 
         socket.on("user_done_typing", async (data) => {
