@@ -19,7 +19,7 @@ class GuildService {
             })
             .populate({
                 path: 'members.memberId',
-                select: '_id username profilePicture'
+                select: '_id username profilePicture onlinePresence'
             })
             .lean();
             return guild

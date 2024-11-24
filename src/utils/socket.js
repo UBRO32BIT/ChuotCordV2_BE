@@ -16,27 +16,34 @@ const createSocket = (httpServer) => {
     });
 
     socket.use((socket, next) => {
-        const header = socket.handshake.auth.token;
-        if (!header) {
-          return next(new Error("no token"));
+        try {
+            const header = socket.handshake.auth.token;
+            if (!header) {
+              console.log(`[SOCKET]: There is no auth header`)
+              return next(new Error("no token"));
+            }
+          
+            if (!header.startsWith("Bearer ")) {
+                console.log(`[SOCKET]: Invalid auth header`)
+                return next(new Error("invalid token"));
+            }
+          
+            const token = header.substring(7);
+          
+            jwt.verify(token, config.jwt.accessSecret, (err, decoded) => {
+              if (err) {
+                console.log(`[SOCKET]: Invalid access token: ${err.message}`)
+                socket.disconnect();    
+                return;
+                //return next(new Error("invalid token"));
+              }
+              socket.userId = decoded.sub;
+              next();
+            });
         }
-      
-        if (!header.startsWith("Bearer ")) {
-          return next(new Error("invalid token"));
+        catch (error) {
+            next(new Error(error.message));
         }
-      
-        const token = header.substring(7);
-      
-        jwt.verify(token, config.jwt.accessSecret, (err, decoded) => {
-          if (err) {
-            console.log(`[SOCKET]: Invalid access token: ${err.message}`)
-            socket.disconnect();
-            return;
-            //return next(new Error("invalid token"));
-          }
-          socket.userId = decoded.sub;
-          next();
-        });
     });
 
     socket.on("connection", async (socket) => {

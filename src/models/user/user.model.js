@@ -2,7 +2,15 @@ const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
-const mongooseDelete = require('mongoose-delete')
+const mongooseDelete = require('mongoose-delete');
+const { string } = require('joi');
+
+const OnlinePresenceEnum = Object.freeze({
+    ONLINE: 'online',
+    IDLE: 'idle',
+    DO_NOT_DISTURB: 'doNotDisturb'
+});
+
 const users = new mongoose.Schema({
     username: {
         type: String,
@@ -37,6 +45,11 @@ const users = new mongoose.Schema({
         default: false,
         require: true,
     },
+    onlinePresence: {
+        type: String,
+        enum: Object.values(OnlinePresenceEnum),
+        default: OnlinePresenceEnum.ONLINE,
+    }
 },{timestamps: true})
 
 users.plugin(mongooseDelete);
