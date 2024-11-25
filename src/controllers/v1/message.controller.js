@@ -6,10 +6,15 @@ class MessageController {
     async GetMessagesByChannelId(req, res, next) {
         try {
             const {channelId} = req.params;
-            const results = await messageService.GetAllMessagesByChannelId(channelId);
+            const { limit, before } = req.query;
+            console.log(before);
+            const messages = await messageService.GetMessagesByChannelId(channelId, {
+                limit: parseInt(limit, 10) || 20,
+                before,
+            });
             res.status(StatusCodes.OK).json({
                 message: "Message List",
-                data: results,
+                data: messages,
             });
         }
         catch (error) {

@@ -68,7 +68,7 @@ const createSocket = (httpServer) => {
             try {
                 if (data && data.channelId) {
                     socket.join(data.channelId);
-                    console.log(`[SOCKET]: User ${socket.userId} connected channel ${data.channel}`);
+                    console.log(`[SOCKET]: User ${socket.userId} connected channel ${data.channelId}`);
                 }
             }
             catch (error) {
