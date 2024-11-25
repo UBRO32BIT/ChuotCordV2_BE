@@ -5,8 +5,6 @@ const bcrypt = require("bcrypt");
 const moment = require("moment");
 const config = require('../../config/config');
 
-const JWT_ACCESS_SECRET_KEY = config.jwt.accessSecret;
-const JWT_REFRESH_SECRET_KEY = config.jwt.refreshSecret;
 const ACCESS_TOKEN_EXPIRATION_MINUTES = config.jwt.accessExpirationMinutes;
 const REFRESH_TOKEN_EXPIRATION_DAYS = config.jwt.refreshExpirationDays;
 
@@ -39,20 +37,10 @@ class AuthService {
         return null;
     }
     async GenerateAccessToken(user) {
-        return await tokenService.GenerateToken(
-            user, 
-            'ACCESS', 
-            JWT_ACCESS_SECRET_KEY, 
-            ACCESS_TOKEN_EXPIRATION_MINUTES + 'm'
-        );
+        return await tokenService.GenerateAccessToken(user._id, user.username);
     }
     async GenerateRefreshToken(user) {
-        return await tokenService.GenerateToken(
-            user, 
-            'REFRESH', 
-            JWT_REFRESH_SECRET_KEY, 
-            REFRESH_TOKEN_EXPIRATION_DAYS + 'd'
-        );
+        return await tokenService.GenerateRefreshToken(user._id, user.username);
     }
     async GenerateAuthToken(user) {
         const accessToken = await this.GenerateAccessToken(user);

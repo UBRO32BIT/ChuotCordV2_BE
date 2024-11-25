@@ -38,6 +38,7 @@ const createSocket = (httpServer) => {
                 //return next(new Error("invalid token"));
               }
               socket.userId = decoded.sub;
+              socket.username = decoded.username;
               next();
             });
         }
@@ -51,17 +52,27 @@ const createSocket = (httpServer) => {
         await onlineStatusService.processUserOnline(socket.userId);
 
         socket.on("user_connect_guild", async (data) => {
-            if (data && data.guildId) {
-                console.log(`[SOCKET]: User ${socket.userId} connected guild ${data.guildId}`);
-                const onlineMemberList = await onlineStatusService.getListMemberOnline(data.guildId);
-                socket.emit("online_members", onlineMemberList);
+            try {
+                if (data && data.guildId) {
+                    console.log(`[SOCKET]: User ${socket.userId} connected guild ${data.guildId}`);
+                    const onlineMemberList = await onlineStatusService.getListMemberOnline(data.guildId);
+                    socket.emit("online_members", onlineMemberList);
+                }
+            }
+            catch (error) {
+                next(new Error(error.message));
             }
         })
 
         socket.on("user_connect_channel", async (data) => {
-            if (data && data.channelId) {
-                socket.join(data.channelId);
-                console.log(`[SOCKET]: User ${socket.userId} connected channel ${data.channel}`);
+            try {
+                if (data && data.channelId) {
+                    socket.join(data.channelId);
+                    console.log(`[SOCKET]: User ${socket.userId} connected channel ${data.channel}`);
+                }
+            }
+            catch (error) {
+                next(new Error(error.message));
             }
         })
         
@@ -89,7 +100,7 @@ const createSocket = (httpServer) => {
             if (data && data.channelId) {
                 socket.nsp.to(data.channelId).emit("user_typing", {
                     channelId: data.channelId,
-                    userId: socket.userId,
+                    userId: socket.username,
                 });
             }
         })
