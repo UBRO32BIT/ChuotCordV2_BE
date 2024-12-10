@@ -15,26 +15,15 @@ const guildRoles = new mongoose.Schema({
         ref: 'Guilds',
         required: true,
     },
-    canViewLog: {
-        type: Boolean,
-        required: true,
-    },
-    canEditRole: {
-        type: Boolean,
-        required: true,
-    },
-    canDeleteMessage: {
-        type: Boolean,
-        required: true,
-    },
-    canGenerateInviteLink: {
-        type: Boolean,
-        required: true,
-    },
-    canKickMember: {
-        type: Boolean,
-        required: true,
-    },
+    permissionCodes: [{
+        type: String,
+    }],
+    displayType: {
+        type: String,
+        enum: ["none", "only_icon", "standard", "combined", "seperate"],
+        default: "none",
+    }
 })
 
-module.exports = mongoose.model('GuildRoles', guildRoles);
+const Role = mongoose.model('GuildRoles', guildRoles);
+module.exports = Role;

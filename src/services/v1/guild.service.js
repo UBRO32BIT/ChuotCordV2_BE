@@ -1,4 +1,6 @@
 const GuildModel = require("../../models/guild/guild.model");
+const GuildRoles = require("../../models/guild/guildRole.model");
+const GuildPermissions = require("../../models/guild/guildPermission.model");
 
 class GuildService {
     async GetGuilds() {
@@ -21,10 +23,15 @@ class GuildService {
                 path: 'members.memberId',
                 select: '_id username profilePicture onlinePresence'
             })
+            .populate({
+                path: 'members.roles',
+                select: '_id name color permissionCodes displayType'
+            })
             .lean();
             return guild
         }
         catch (error) {
+            console.error(error);
             return null;
         }
     }
