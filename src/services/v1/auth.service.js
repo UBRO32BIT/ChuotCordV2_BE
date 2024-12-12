@@ -1,10 +1,13 @@
 const userService = require('./user.service');
 const tokenService = require('./token.service');
+const emailService = require('./email.service');
 const UserModel = require("../../models/user/user.model");
 const bcrypt = require("bcrypt");
 const moment = require("moment");
+const jwt = require("jsonwebtoken");
 const config = require('../../config/config');
 
+const JWT_RECOVERY_SECRET_KEY = config.jwt.recoverySecret;
 const ACCESS_TOKEN_EXPIRATION_MINUTES = config.jwt.accessExpirationMinutes;
 const REFRESH_TOKEN_EXPIRATION_DAYS = config.jwt.refreshExpirationDays;
 
@@ -35,6 +38,18 @@ class AuthService {
             }
         }
         return null;
+    }
+    async SendRecoveryEmail(email) {
+        const user = await userService.GetUserByEmail(email);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        const token = await tokenService.GenerateRecoveryToken(user._id);
+        return await emailService.SendRecoveryEmail(email, user.username, token);
+    }
+    async ResetPassword(token, newPassword) {
+        const payload = jwt.verify(token, JWT_RECOVERY_SECRET_KEY);
+        await userService.ResetPassword(payload.sub, newPassword);
     }
     async GenerateAccessToken(user) {
         return await tokenService.GenerateAccessToken(user._id, user.username);

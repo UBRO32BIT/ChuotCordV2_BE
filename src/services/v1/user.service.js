@@ -97,6 +97,47 @@ class UserService {
             throw error;
         }
     }
+    async ChangePassword(userId, oldPassword, newPassword) {
+        try {
+            const user = await UserModel.findById(userId);
+            if (!user) {
+                throw new Error('User not found');
+            }
+
+            const isPasswordValid = await bcrypt.compare(
+                `${oldPassword}`,
+                user.password
+            );
+            if (!isPasswordValid) {
+                return new Error('Old password is incorrect');
+            }
+
+            if (newPassword) {
+                user.password = newPassword;
+                await user.save();
+            }
+            return user;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async ResetPassword(userId, newPassword) {
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        if (newPassword) {
+            user.password = newPassword;
+            await user.save();
+        }
+    }
+    async SendVerifyEmail(userId) {
+
+    }
+    async VerifyEmail(verifyToken) {
+
+    }
 }
 
 module.exports = new UserService;

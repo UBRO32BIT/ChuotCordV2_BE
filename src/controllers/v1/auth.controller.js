@@ -61,6 +61,29 @@ class AuthController {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message});
         }
     }
+    async SendRecoveryEmail(req, res, next) {
+        try {
+            const {email} = req.body;
+            await authService.SendRecoveryEmail(email);
+            res.status(StatusCodes.OK).json({ message: "Email sent to your email address" });
+        }
+        catch (error) {
+            logger.error(error);
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message});
+        }
+    }
+    async ResetPassword(req, res, next) {
+        try {
+            const {token} = req.query;
+            const {newPassword} = req.body;
+            await authService.ResetPassword(token, newPassword);
+            res.status(StatusCodes.OK).json({ message: "Change password successfully" });
+        }
+        catch (error) {
+            logger.error(error);
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message});
+        }
+    }
     async RefreshToken(req, res, next) {
         try {
             const data = req.user.data;
