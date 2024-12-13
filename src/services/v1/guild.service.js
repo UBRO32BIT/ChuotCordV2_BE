@@ -26,8 +26,7 @@ class GuildService {
             .populate({
                 path: 'members.roles',
                 select: '_id name color permissionCodes displayType'
-            })
-            .lean();
+            });
             return guild
         }
         catch (error) {
@@ -85,6 +84,45 @@ class GuildService {
             throw error;
         }
     }
+    async BanMember(guildId, memberId, reason, endDate = null) {
+        try {
+            // Check if the member is already in the blacklist
+            const guild = await GuildModel.findById(guildId);
+            if (!guild) throw new Error('Guild not found');
+    
+            const isBlacklisted = guild.blacklists.some(
+                (blacklist) => blacklist.userId.toString() === memberId
+            );
+    
+            if (isBlacklisted) {
+                throw new Error('Member is already banned');
+            }
+    
+            // Add the member to the blacklist
+            await GuildModel.findByIdAndUpdate(
+                guildId,
+                {
+                    $push: {
+                        blacklists: {
+                            userId: memberId,
+                            reason: reason,
+                            endDate: endDate,
+                        },
+                    },
+                    $pull: {
+                        members: { memberId: memberId }, // Remove the member from the guild
+                    },
+                },
+                { new: true, useFindAndModify: false }
+            );
+    
+            return { success: true, message: 'Member has been banned successfully' };
+        } catch (error) {
+            console.error(error);
+            throw new Error(`Failed to ban member: ${error.message}`);
+        }
+    }
+    
     async DeleteGuild(id) {
         try {
             const guild = await GuildModel.findById(id);

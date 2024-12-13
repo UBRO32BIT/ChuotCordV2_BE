@@ -102,7 +102,7 @@ class AuthController {
             })
         }
     }
-    async RewokeToken(req, res, next) {
+    async RevokeToken(req, res, next) {
         //TODO: REWOKE TOKEN FOR LOGOUT
     }
     async IsAuthenticated(req, res, next) {

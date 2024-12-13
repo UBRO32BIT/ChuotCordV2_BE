@@ -38,6 +38,23 @@ const guilds = new mongoose.Schema({
             required: true,
         }
     }],
+    blacklists: [{
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Users',
+        },
+        reason: {
+            type: String,
+        },
+        timestamp: {
+            type: Date,
+            default: Date.now,
+            required: true,
+        },
+        endDate: {
+            type: Date,
+        }
+    }],
     roles: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'GuildRoles'

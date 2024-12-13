@@ -35,6 +35,14 @@ const users = new mongoose.Schema({
     profilePicture: {
         type: String,
         default: null,
+        get: function (value) {
+            const host = 'http://localhost:8080';
+            return value ? `${host}${value}` : null;
+        },
+    },
+    profileDescription: {
+        type: String,
+        default: null,
     },
     guilds: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -50,7 +58,11 @@ const users = new mongoose.Schema({
         enum: Object.values(OnlinePresenceEnum),
         default: OnlinePresenceEnum.ONLINE,
     }
-},{timestamps: true})
+}, {
+    timestamps: true, 
+    toObject : {getters: true}, 
+    toJSON : {getters: true}
+})
 
 users.plugin(mongooseDelete);
 users.plugin(mongoosePaginate);

@@ -11,6 +11,7 @@ const router = express.Router();
 router.get('/', CheckAuth, guildController.GetGuilds);
 router.get('/:id', CheckAuth, guildController.GetGuildById);
 router.post('/', CheckAuth, guildController.CreateGuild);
+router.post('/:id/ban-member', CheckAuth, AuthorizeGuild, guildController.BanMemberFromGuild);
 router.patch('/:id', CheckAuth, AuthorizeGuild, guildController.UpdateGuild);
 router.patch('/:id/remove-member/:memberId', CheckAuth, AuthorizeGuild, ValidateRemoveMember, guildController.RemoveMemberFromGuild);
 router.delete('/:id', CheckAuth, AuthorizeGuild, guildController.DeleteGuild);

@@ -14,7 +14,7 @@ const config = require('./config/config');
 const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 //const { errorConverter, errorHandler } = require('./middlewares/error');
-const ApiError = require('./utils/ApiError');
+const ApiError = require('./errors/ApiError');
 
 const app = express();
 
@@ -25,7 +25,7 @@ require('dotenv').config();
 // }
 
 // set security HTTP headers
-app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 // parse json request body
 app.use(express.json());

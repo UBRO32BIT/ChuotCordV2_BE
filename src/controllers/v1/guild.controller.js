@@ -88,6 +88,33 @@ class GuildController {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message});
         }
     }
+    async BanMemberFromGuild(req, res, next) {
+        try {
+            const { id: guildId } = req.params; // Guild ID from URL params
+            const { memberId } = req.body; // Member ID from request body
+            const { reason, endDate } = req.body; // Ban reason and optional end date
+    
+            // Validate inputs
+            if (!memberId || !reason) {
+                return res.status(StatusCodes.BAD_REQUEST).json({
+                    message: "Member ID and reason are required",
+                });
+            }
+    
+            logger.info(`[GuildController]: Start banning member ${memberId} from guild ${guildId}`);
+    
+            // Call the service layer to handle the ban logic
+            const result = await guildService.BanMember(guildId, memberId, reason, endDate);
+    
+            res.status(StatusCodes.OK).json({
+                message: "Member banned successfully",
+                data: result,
+            });
+        } catch (error) {
+            logger.error(`[GuildController]: Error banning member: ${error.message}`);
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+        }
+    }
     async DeleteGuild(req, res, next) {
         try {
             const { userId } = req.user;
