@@ -12,7 +12,7 @@ function getFileType(fileName) {
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
     const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.flv'];
     const textExtensions = ['.txt', '.md', '.log'];
-    const codeExtensions = ['.js', '.ts', '.html', '.css', '.java', '.py'];
+    const codeExtensions = ['.js', '.ts', '.json', '.html', '.css', '.tsx', '.java', '.cs' , '.py'];
     
     if (imageExtensions.includes(extname)) {
         return 'image';

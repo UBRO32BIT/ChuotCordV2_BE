@@ -55,11 +55,22 @@ const createSocket = (httpServer) => {
             try {
                 if (data && data.guildId) {
                     console.log(`[SOCKET]: User ${socket.userId} connected guild ${data.guildId}`);
-                    const onlineMemberList = await onlineStatusService.getListMemberOnline(data.guildId);
-                    socket.emit("online_members", onlineMemberList);
                 }
             }
             catch (error) {
+                next(new Error(error.message));
+            }
+        })
+
+        socket.on("request_online_members", async (data) => {
+            try {
+                if (data && data.guildId) {
+                    const members = await onlineStatusService.getListMemberOnline(data.guildId);
+                    socket.emit("online_members", members);
+                }
+            }
+            catch (error) {
+                console.error("[SOCKET]: Error while handle request_online_members event: " + error.message);
                 next(new Error(error.message));
             }
         })

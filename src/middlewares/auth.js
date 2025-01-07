@@ -35,8 +35,9 @@ const checkRefreshToken = async (req, res, next) => {
         if (req.cookies && req.cookies.refreshToken) {
             const payload = jwt.verify(req.cookies.refreshToken, JWT_REFRESH_SECRET_KEY);
             //CALL VERIFY TOKEN FUNCTION LATER
-            req.token = {
-                userId: payload.sub,
+            req.user = {
+                _id: payload.sub,
+                username: payload.username,
             }
             next();
         }

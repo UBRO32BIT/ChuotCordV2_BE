@@ -86,7 +86,7 @@ class AuthController {
     }
     async RefreshToken(req, res, next) {
         try {
-            const data = req.user.data;
+            const data = req.user;
             const token = await authService.GenerateAccessToken(data);
             res.status(StatusCodes.OK).json(
                 {
