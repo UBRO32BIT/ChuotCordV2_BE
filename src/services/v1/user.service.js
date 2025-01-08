@@ -1,4 +1,5 @@
 const UserModel = require("../../models/user/user.model");
+const GuildModel = require("../../models/guild/guild.model");
 const emailService = require('../../services/v1/email.service');
 const redisClient = require("../../database/redis.database");
 const bcrypt = require('bcrypt');
@@ -39,16 +40,28 @@ class UserService {
     }
     async GetGuildsByUserId(userId) {
         try {
-            const user = await UserModel.findById(userId).select('guilds -_id').populate({
-                path: 'guilds',
-                select: '_id name image', // Select the fields you want to populate
-            });
-            return user.guilds;
-        }
-        catch (error) {
+            const user = await UserModel.findById(userId).select('guilds -_id');
+            if (!user) return null;
+    
+            const guilds = await GuildModel.aggregate([
+                { $match: { _id: { $in: user.guilds } } },
+                {
+                    $project: {
+                        _id: 1,
+                        name: 1,
+                        image: 1,
+                        memberCounts: { $size: "$members" }, // Count the members array
+                    },
+                },
+            ]);
+    
+            return guilds;
+        } catch (error) {
+            console.error(error);
             return null;
         }
     }
+
     async AppendGroup(userId, guildId) {
         try {
             await UserModel.findOneAndUpdate(

@@ -1,7 +1,31 @@
+const { StatusCodes } = require("http-status-codes");
+const guildService = require("../../services/v1/guild.service");
+
 class GuildRoleController {
     async GetRolesByGuildId(req, res, next) {
         try {
-            res.status(StatusCodes.OK).json({message: "test"});
+            const { id } = req.params;
+            const result = await guildService.GetGuildRoles(id);
+            res.status(StatusCodes.OK).json({
+                message: "Roles List",
+                data: result,
+            });
+        }
+        catch (error) {
+            console.log(error);
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message});
+        }
+    }
+
+    async CreateRole(req, res, next) {
+        try {
+            const { guildId } = req.params;
+            const data = req.body;
+            const result = await guildService.AddRole(guildId, data);
+            res.status(StatusCodes.CREATED).json({
+                message: "Role created",
+                data: result,
+            })
         }
         catch (error) {
             console.log(error);

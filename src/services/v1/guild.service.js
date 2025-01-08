@@ -34,6 +34,25 @@ class GuildService {
             return null;
         }
     }
+    async GetGuildRoles(guildId) {
+        try {
+            const roles = await GuildRoles.find({ guildId: guildId });
+            return roles;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async AddRole(guildId, data) {
+        try {
+            const role = new GuildRoles({ ...data, guildId: guildId });
+            return role.save();
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+
     async CreateGuild({userId, name}) {
         const data = {
             name: name,
