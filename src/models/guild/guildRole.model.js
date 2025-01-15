@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const permissionCodes = require('../../constants/permission.contraints')
 
 const guildRoles = new mongoose.Schema({
     name: {
@@ -17,12 +18,14 @@ const guildRoles = new mongoose.Schema({
     },
     permissionCodes: [{
         type: String,
+        required: true,
+        enum: Object.values(permissionCodes)
     }],
     displayType: {
         type: String,
         enum: ["none", "only_icon", "standard", "combined", "seperate"],
         default: "none",
-    }
+    },
 })
 
 const Role = mongoose.model('GuildRoles', guildRoles);

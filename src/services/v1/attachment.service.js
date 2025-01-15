@@ -8,7 +8,6 @@ class AttachmentService {
         const fileType = getFileType(filePath);
         if (fileType === 'code') {
             const content = fs.readFileSync(path.join(__dirname, '../../../' + filePath), 'utf-8');
-            console.log(content);
             return content;
         }
         return null;

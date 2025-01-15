@@ -1,5 +1,6 @@
 const guildInviteService = require("../../services/v1/guildInvite.service");
 const { StatusCodes } = require('http-status-codes');
+const handleApiError = require("./error.controller");
 
 class InviteController {
     async CreateInvite(req, res, next) {
@@ -35,8 +36,7 @@ class InviteController {
             });
         }
         catch (error) {
-            console.log(error);
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message: error.message});
+            handleApiError(error, req, res, next);
         }
     }
     async GetInviteByCode(req, res, next) {

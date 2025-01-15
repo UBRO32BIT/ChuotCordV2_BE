@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const mongooseDelete = require('mongoose-delete');
-const { string } = require('joi');
+const config = require('../../config/config');
 
 const OnlinePresenceEnum = Object.freeze({
     ONLINE: 'online',
@@ -36,7 +36,7 @@ const users = new mongoose.Schema({
         type: String,
         default: null,
         get: function (value) {
-            const host = 'http://localhost:8080';
+            const host = config.serverHost;
             return value ? `${host}${value}` : null;
         },
     },

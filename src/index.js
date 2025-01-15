@@ -1,11 +1,10 @@
-const mongoose = require('mongoose');
+
 const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
 const { createServer } = require('http');
 const { createSocket } = require('./utils/socket');
-const redisClient = require('./database/redis.database');
-
+const connectToMongoDB = require('./database/mongo.database');
 let server;
 const httpServer = createServer(app);
 
@@ -13,13 +12,7 @@ const httpServer = createServer(app);
 createSocket(httpServer);
 
 //Connect to mongodb
-mongoose.connect(config.mongoose.url, config.mongoose.options)
-.then(() => {
-  logger.info('Connected to MongoDB');
-})
-.catch((err) => {
-  logger.error(`MongoDB connection failed: ${err}`);
-});
+connectToMongoDB();
 
 const exitHandler = () => {
   if (server) {

@@ -40,7 +40,9 @@ class OnlineStatusService {
 
     async getListMemberOnline(guildId) {
         try {
-            return await redisClient.sMembers(`online:guild:${guildId}`);
+            const result = await redisClient.sMembers(`online:guild:${guildId}`);
+            console.log(result);
+            return result;
         }
         catch (error) {
             console.error(error);

@@ -2,7 +2,7 @@ const UserModel = require("../../models/user/user.model");
 const GuildModel = require("../../models/guild/guild.model");
 const emailService = require('../../services/v1/email.service');
 const redisClient = require("../../database/redis.database");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 class UserService {
     async GetUsers() {

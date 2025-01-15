@@ -54,7 +54,13 @@ class AuthController {
             }
             const userData = await authService.Register(username, email, password, phoneNumber);
             const tokens = await authService.GenerateAuthToken(userData);
-            res.status(StatusCodes.CREATED).json({ userData, tokens });
+            res.status(StatusCodes.CREATED).json({
+                message: "Register successfully", 
+                data: {
+                    user: userData, 
+                    tokens: tokens,
+                } 
+            });
         }
         catch (error) {
             logger.error(error);

@@ -1,7 +1,8 @@
 const path = require('path');
+const config = require('../config/config');
 
 function getFullUrl(relativePath) {
-    const baseUrl = 'http://localhost:8080';
+    const baseUrl = config.serverHost;
     return `${baseUrl}${relativePath}`;
 }
 

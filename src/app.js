@@ -15,6 +15,7 @@ const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 //const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./errors/ApiError');
+const errorHandler = require('./controllers/v1/error.controller');
 
 const app = express();
 
@@ -75,7 +76,7 @@ app.use((req, res, next) => {
 // convert error to ApiError, if needed
 // app.use(errorConverter);
 
-// // handle error
-// app.use(errorHandler);
+// handle error
+app.use(errorHandler);
 
 module.exports = app;

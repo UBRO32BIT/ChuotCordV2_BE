@@ -1,3 +1,5 @@
+const { StatusCodes } = require("http-status-codes");
+const ApiError = require("../../errors/ApiError");
 const GuildInviteModel = require("../../models/guild/guildInvite.model");
 const guildService = require("./guild.service");
 const userService = require("./user.service");
@@ -63,7 +65,7 @@ class GuildInviteService {
         try {
             const invite = await this.GetInviteByCode(inviteCode);
             if (!invite) {
-                throw Error("Invite not found or expired");
+                throw new ApiError(StatusCodes.NOT_FOUND, "Invite not found or expired");
             }
             const guildMembers = invite.guild.members
             let isGuildMember = false;
@@ -77,7 +79,7 @@ class GuildInviteService {
                 })
             }
             if (isGuildMember) {
-                throw Error("The current user is already a guild member");
+                throw new ApiError(StatusCodes.BAD_REQUEST, "The current user is already a guild member");
             }
             await guildService.AddMember(invite.guild._id, userId);
             await userService.AppendGroup(userId, invite.guild._id);
